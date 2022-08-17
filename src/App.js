@@ -1,7 +1,7 @@
 // @ts-nocheck
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
-import Login from './pages/Login/Login'
-import Layout from './pages/Layout/Layout'
+import Login from 'pages/Login/Login'
+import Layout from 'pages/Layout/Layout'
 function App() {
   return (
     <Router>
