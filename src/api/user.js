@@ -1,4 +1,4 @@
-import request from 'utils/reequest'
+import request from 'utils/request'
 /**
  * 登录请求 用于用户登录
  * @param {string} mobile 手机号
@@ -13,5 +13,16 @@ export const login = (mobile, code) => {
       mobile,
       code
     }
+  })
+}
+
+/**
+ * 获取用户信息
+ * @returns
+ */
+export const getUserProfile = () => {
+  return request({
+    method: 'get',
+    url: '/user/profile'
   })
 }

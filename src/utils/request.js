@@ -1,4 +1,7 @@
+import { message } from 'antd'
 import axios from 'axios'
+import { getToken, hasToken, removeToken } from './storage'
+import history from 'utils/history'
 const instance = axios.create({
   baseURL: 'http://geek.itheima.net/v1_0',
   timeout: 5000
@@ -8,6 +11,9 @@ const instance = axios.create({
 instance.interceptors.request.use(
   function (config) {
     // 在发送请求之前做些什么
+    if (hasToken()) {
+      config.headers.Authorization = `Bearer ${getToken()}`
+    }
     return config
   },
   function (error) {
@@ -24,6 +30,13 @@ instance.interceptors.response.use(
   },
   function (error) {
     // 对响应错误做点什么
+    if (error && error.response.status === 401) {
+      removeToken()
+      message.warning('身份验证过期,请重新登录', 1, () => {
+        history.push('/login')
+        history.go()
+      })
+    }
     return Promise.reject(error)
   }
 )
