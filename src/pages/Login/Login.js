@@ -7,23 +7,23 @@ import styles from './index.module.scss'
 import logo from 'assets/logo.png'
 import { login } from 'api/user'
 import { hasToken, setToken } from 'utils/storage'
-
 export default function Login() {
   const location = useLocation()
+  console.log(location)
   // 解构回调页面
   const { state } = location
   // 传入一个状态isloading和一个更改loding的状态的方法 默认loading是false
   const [isloading, setLoading] = useState(false)
   // 编程式导航  Navigate
   const navigate = useNavigate()
+
   // 判断是否是从home因为授权重定向到此处的 如果是 给予提示框 如果否 return
   useEffect(() => {
-    // if (!state.from) return
-    // if (state.msg && state.msg === 401) return message.warning('登录信息过期，请重新登录', 0.4)
+    if (location.state && location.state.msg === 401) return
     if (hasToken()) return
     message.info('您没有登录，请登录后在进入', 0.9)
     // 传入第二个参数 state 当state的值发生变化时该函数才会执行
-  }, [])
+  }, [location])
   // 登录按钮调用该方法
   const onFinish = async ({ mobile, code }) => {
     try {
