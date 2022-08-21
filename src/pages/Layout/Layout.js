@@ -91,7 +91,8 @@ export default function LayoutCompoent() {
           </Sider>
           <Layout
             style={{
-              padding: '24px'
+              padding: '24px',
+              overflow: 'auto'
             }}
           >
             <Content className="site-layout-background">

@@ -33,7 +33,7 @@ instance.interceptors.response.use(
     if (error && error.response.status === 401) {
       removeToken()
       message.warning('身份验证过期,请重新登录', 1, () => {
-        history.push('/login')
+        history.push('/login', { msg: 401 })
         history.go()
       })
     }
