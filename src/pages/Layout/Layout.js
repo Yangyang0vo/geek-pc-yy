@@ -1,5 +1,5 @@
 import React, { useLayoutEffect, useState } from 'react'
-import { Routes, Route, useNavigate, useLocation, Navigate } from 'react-router-dom'
+import { Routes, Route, useNavigate, useLocation, Navigate, useParams } from 'react-router-dom'
 import styles from './index.module.scss'
 import { Layout, Menu, message, Popconfirm } from 'antd'
 import { LogoutOutlined, HomeOutlined, DiffOutlined, EditOutlined } from '@ant-design/icons'
@@ -22,6 +22,7 @@ export default function LayoutCompoent() {
   // 退出系统
   const navigate = useNavigate()
   const location = useLocation()
+  const params = useParams()
   const [profile, setProfile] = useState({})
   const onConfirm = () => {
     // 移除token
@@ -40,18 +41,6 @@ export default function LayoutCompoent() {
     }
   }
 
-  // useEffect(() => {
-  //   const path = location.pathname
-  //   if (path === '/home') {
-  //     setSelectedKey('1')
-  //   } else if (path === '/home/list') {
-  //     setSelectedKey('2')
-  //   } else if (path === '/home/publish') {
-  //     setSelectedKey('3')
-  //   } else {
-  //     setSelectedKey('1')
-  //   }
-  // }, [location.pathname])
   useLayoutEffect(() => {
     const getU = async () => {
       const res = await getUserProfile()
@@ -98,8 +87,9 @@ export default function LayoutCompoent() {
             <Content className="site-layout-background">
               <Routes>
                 <Route path="/" element={<Home />}></Route>
-                <Route path="/list" element={<ArticleList />}></Route>
-                <Route path="/publish" element={<ArticlePubulish />}></Route>
+                <Route path="/list" element={<ArticleList navigate={navigate} />}></Route>
+                <Route path="/publish" element={<ArticlePubulish navigate={navigate} />}></Route>
+                <Route path="/publish/:id" element={<ArticlePubulish id={params['*'].split('/')[1]} />}></Route>
                 <Route path="*" element={<Navigate to={'/home'} />}></Route>
               </Routes>
             </Content>

@@ -9,7 +9,7 @@ import { login } from 'api/user'
 import { hasToken, setToken } from 'utils/storage'
 export default function Login() {
   const location = useLocation()
-  console.log(location)
+
   // 解构回调页面
   const { state } = location
   // 传入一个状态isloading和一个更改loding的状态的方法 默认loading是false
@@ -35,7 +35,6 @@ export default function Login() {
         // 1.保存token
         setToken(res.data.token)
         // 2.跳转 如果有from  跳转到from  没有则跳到首页
-        console.log(state)
         if (state && state.from) {
           navigate(state.from, { replace: true })
         } else {
