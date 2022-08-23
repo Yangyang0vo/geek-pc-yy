@@ -1,13 +1,13 @@
 import React, { useLayoutEffect, useState } from 'react'
 import { Routes, Route, useNavigate, useLocation, Navigate, useParams } from 'react-router-dom'
-import styles from './index.module.scss'
 import { Layout, Menu, message, Popconfirm } from 'antd'
 import { LogoutOutlined, HomeOutlined, DiffOutlined, EditOutlined } from '@ant-design/icons'
-import { removeToken } from 'utils/storage'
-import ArticleList from 'pages/ArticleList/ArticleList'
-import ArticlePubulish from 'pages/ArticlePublish/ArticlePublish'
-import Home from 'pages/Home/Home'
 import { getUserProfile } from 'api/user'
+import { removeToken } from 'utils/storage'
+import styles from './index.module.scss'
+const ArticlePubulish = React.lazy(() => import('pages/ArticlePublish/ArticlePublish'))
+const Home = React.lazy(() => import('pages/Home/Home'))
+const ArticleList = React.lazy(() => import('pages/ArticleList/ArticleList'))
 const { Header, Content, Sider } = Layout
 function getItem(label, key, icon) {
   return {
