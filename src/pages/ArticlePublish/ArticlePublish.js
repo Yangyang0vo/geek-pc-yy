@@ -7,7 +7,7 @@ import Channel from 'components/Channel/Channel'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
 import { baseURL } from 'utils/request'
-import { addArticle, getArticleById } from 'api/article'
+import { addArticle, getArticleById, editArticleById } from 'api/article'
 export default class ArticlePubulish extends Component {
   state = {
     // 文章的封面类型
@@ -15,16 +15,29 @@ export default class ArticlePubulish extends Component {
     // 用于控制上传的图片 以及图片的显示
     fileList: [],
     previewVisible: false,
-    previewImage: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+    previewImage: '',
     id: this.props.id
   }
+
   async componentDidMount() {
     if (this.state.id) {
       // 有id的情况
       const res = await getArticleById(this.state.id)
-      console.log(res)
+      const values = {
+        ...res.data,
+        type: res.data.cover.type
+      }
+      const fileList = res.data.cover.images.map((item) => {
+        return {
+          url: item
+        }
+      })
+      // 给表单设置初始值
+      this.formRef.current.setFieldsValue(values)
+      // 给图片回显
       this.setState({
-        ...res.data
+        fileList,
+        type: res.data.cover.type
       })
     }
   }
@@ -43,7 +56,7 @@ export default class ArticlePubulish extends Component {
             </Breadcrumb>
           }
         >
-          <Form ref={this.formRef} labelCol={{ span: 4 }} size="large" onFinish={this.onFinish} validateTrigger={['onBlur', 'onChange']} initialValues={{ content: '11', type: type }}>
+          <Form ref={this.formRef} labelCol={{ span: 4 }} size="large" onFinish={this.onFinish} validateTrigger={['onBlur', 'onChange']} initialValues={{ type: type }}>
             <Form.Item
               label="频道"
               name="title"
@@ -122,21 +135,35 @@ export default class ArticlePubulish extends Component {
     const images = fileList.map((item) => {
       return item.url || item.response.data.url
     })
-    const res = await addArticle(
-      {
-        ...values,
-        cover: {
-          type,
-          images
-        }
-      },
-      draft
-    )
-    if (res.message === 'OK') {
-      message.success('添加成功', 1, () => {
-        this.props.navigate('/home/list')
-      })
+    if (this.state.id) {
+      // 修改文章
+      await editArticleById(
+        {
+          ...values,
+          cover: {
+            type,
+            images
+          },
+          id: this.state.id
+        },
+        draft
+      )
+    } else {
+      // 发布文章
+      await addArticle(
+        {
+          ...values,
+          cover: {
+            type,
+            images
+          }
+        },
+        draft
+      )
     }
+    message.success(`${this.state.id ? '编辑成功' : '添加成功'}`, 1, () => {
+      this.props.navigate('/home/list')
+    })
   }
   onFinish = async (values) => {
     this.save(values, false)

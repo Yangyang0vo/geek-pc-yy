@@ -24,6 +24,7 @@ export default function LayoutCompoent() {
   const location = useLocation()
   const params = useParams()
   const [profile, setProfile] = useState({})
+  const [selectedKey, setSelectedKey] = useState(location.pathname)
   const onConfirm = () => {
     // 移除token
     removeToken()
@@ -49,6 +50,12 @@ export default function LayoutCompoent() {
     }
     getU()
   }, [])
+  useLayoutEffect(() => {
+    if (location.pathname.startsWith('/home/publish')) {
+      return setSelectedKey('/home/publish')
+    }
+    setSelectedKey(location.pathname)
+  }, [location.pathname])
 
   return (
     <div className={styles.layout}>
@@ -74,7 +81,7 @@ export default function LayoutCompoent() {
                 height: '100%',
                 borderRight: 0
               }}
-              defaultSelectedKeys={location.pathname}
+              selectedKeys={selectedKey}
               onClick={menuclick}
             ></Menu>
           </Sider>
@@ -88,8 +95,8 @@ export default function LayoutCompoent() {
               <Routes>
                 <Route path="/" element={<Home />}></Route>
                 <Route path="/list" element={<ArticleList navigate={navigate} />}></Route>
-                <Route path="/publish" element={<ArticlePubulish navigate={navigate} />}></Route>
-                <Route path="/publish/:id" element={<ArticlePubulish id={params['*'].split('/')[1]} />}></Route>
+                <Route path="/publish" element={<ArticlePubulish navigate={navigate} key="add" />}></Route>
+                <Route path="/publish/:id" element={<ArticlePubulish navigate={navigate} id={params['*'].split('/')[1]} key="edit" />} key={params}></Route>
                 <Route path="*" element={<Navigate to={'/home'} />}></Route>
               </Routes>
             </Content>

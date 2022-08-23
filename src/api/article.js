@@ -48,3 +48,17 @@ export const getArticleById = (id) => {
     url: `/mp/articles/${id}`
   })
 }
+
+/**
+ * 修改文章的接口
+ * @param {*} data
+ * @param {*} draft
+ * @returns
+ */
+export const editArticleById = (data, draft) => {
+  return request({
+    url: `/mp/articles/${data.id}?draft=${draft}`,
+    method: 'put',
+    data
+  })
+}
